@@ -20,7 +20,7 @@ export const register = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Please provide all required fields' });
     }
 
-    const userExists = await User.findOne({ email });
+    const userExists = await User.findOne({ email: email.toLowerCase() });
     if (userExists) {
       return res.status(400).json({ success: false, message: 'An account with this email already exists' });
     }
@@ -29,7 +29,7 @@ export const register = async (req, res, next) => {
 
     const user = await User.create({
       name,
-      email,
+      email: email.toLowerCase(),
       phone,
       password,
       role: assignedRole,
@@ -74,7 +74,7 @@ export const login = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Please provide email and password' });
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
     if (!user || !(await user.matchPassword(password))) {
       return res.status(401).json({ success: false, message: 'Invalid email or password' });
     }
@@ -91,6 +91,80 @@ export const login = async (req, res, next) => {
       entity: 'User',
       entityId: user._id,
       description: `User ${user.email} authenticated successfully`,
+      req,
+    });
+
+    res.status(200).json({
+      success: true,
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        avatar: user.avatar,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    1-Click Demo Login (Auto provisions demo accounts if not seeded)
+// @route   POST /api/auth/demo
+// @access  Public
+export const demoAuth = async (req, res, next) => {
+  try {
+    const { role } = req.body;
+    const validRoles = ['landlord', 'tenant', 'service_provider', 'admin'];
+    const targetRole = validRoles.includes(role) ? role : 'tenant';
+
+    const demoTemplates = {
+      landlord: {
+        name: 'Sarah Jenkins (Demo Landlord)',
+        email: 'landlord@rentalproof.com',
+        phone: '+1 (555) 234-5678',
+        role: 'landlord',
+      },
+      tenant: {
+        name: 'Marcus Vance (Demo Tenant)',
+        email: 'tenant@rentalproof.com',
+        phone: '+1 (555) 876-5432',
+        role: 'tenant',
+      },
+      service_provider: {
+        name: 'Apex Handyman Services',
+        email: 'service@rentalproof.com',
+        phone: '+1 (555) 345-6789',
+        role: 'service_provider',
+      },
+      admin: {
+        name: 'Platform Administrator',
+        email: 'admin@rentalproof.com',
+        phone: '+1 (555) 999-0000',
+        role: 'admin',
+      },
+    };
+
+    const template = demoTemplates[targetRole];
+    let user = await User.findOne({ email: template.email });
+
+    if (!user) {
+      user = await User.create({
+        ...template,
+        password: 'Password123!',
+      });
+    }
+
+    const token = generateToken(user._id);
+
+    await logAudit({
+      user: user._id,
+      action: 'Demo Login',
+      entity: 'User',
+      entityId: user._id,
+      description: `User authenticated via 1-click Demo mode as ${targetRole}`,
       req,
     });
 

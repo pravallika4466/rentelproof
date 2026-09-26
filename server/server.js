@@ -39,48 +39,55 @@ connectDB();
 
 const app = express();
 
-// Trust reverse proxy for accurate client IP detection on Render / Railway
+// Trust reverse proxy for accurate client IP detection on Render / Railway / Vercel
 app.set('trust proxy', 1);
 
 // Security Middleware
 app.use(
   helmet({
     crossOriginResourcePolicy: false, // Allows cross-origin image embedding
+    crossOriginEmbedderPolicy: false,
   })
 );
 
-// CORS setup
+// CORS setup supporting Vercel, Render, and Localhost environments
 const allowedOrigins = [
   process.env.CLIENT_URL,
+  'https://rentelproof.vercel.app',
+  'https://rentelproof.onrender.com',
   'https://rental-proof-beige.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:5000',
   'http://127.0.0.1:5173',
+  'http://127.0.0.1:3000',
+  'http://127.0.0.1:5000',
 ].filter(Boolean);
 
 app.use(
   cors({
     origin: function (origin, callback) {
-      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+      // Allow requests with no origin (e.g. mobile apps, curl, server-to-server, Postman)
       if (!origin) return callback(null, true);
 
-      // Check if origin matches allowed list or any Vercel domain or localhost
+      // Check if origin matches allowed list or any Vercel domain or localhost or onrender.com
       const isAllowed =
         allowedOrigins.includes(origin) ||
         origin.endsWith('.vercel.app') ||
+        origin.endsWith('.onrender.com') ||
         origin.includes('localhost') ||
         origin.includes('127.0.0.1');
 
       if (isAllowed) {
         callback(null, true);
       } else {
-        callback(null, true); // Fallback to avoid blocking
+        callback(null, true); // Fallback to avoid blocking in production
       }
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
+    exposedHeaders: ['Set-Cookie'],
   })
 );
 
@@ -98,10 +105,10 @@ app.use(express.urlencoded({ extended: true, limit: '20mb' }));
 // Static uploads folder
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Basic rate limiting for auth endpoints
+// Basic rate limiting for auth endpoints (generous limit for production demos)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
+  max: 300, // Limit each IP to 300 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
   message: { success: false, message: 'Too many login attempts, please try again after 15 minutes' },
@@ -135,7 +142,7 @@ app.use('/api/audit-logs', auditRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 
-// Serve static client in production if built
+// Serve static client in production if built locally
 if (process.env.NODE_ENV === 'production') {
   const clientDist = path.join(__dirname, '../client/dist');
   app.use(express.static(clientDist));

@@ -6,8 +6,12 @@ const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem('rentalproof_user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('rentalproof_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch (e) {
+      return null;
+    }
   });
   const [token, setToken] = useState(() => localStorage.getItem('rentalproof_token') || null);
   const [loading, setLoading] = useState(true);
@@ -25,7 +29,7 @@ export const AuthProvider = ({ children }) => {
           }
         } catch (error) {
           console.error('Session check failed:', error);
-          logout();
+          logout(false);
         }
       }
       setLoading(false);
@@ -53,19 +57,35 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // 1-Click Demo Login
+  // 1-Click Demo Login (Auto-provisions demo accounts if database is fresh)
   const demoLogin = async (role) => {
-    const credentials = {
-      landlord: { email: 'landlord@rentalproof.com', password: 'Password123!' },
-      tenant: { email: 'tenant@rentalproof.com', password: 'Password123!' },
-      service_provider: { email: 'service@rentalproof.com', password: 'Password123!' },
-      admin: { email: 'admin@rentalproof.com', password: 'Password123!' },
-    };
-
-    const targetCreds = credentials[role];
-    if (!targetCreds) return { success: false, message: 'Invalid demo role' };
-
-    return await login(targetCreds.email, targetCreds.password);
+    try {
+      const res = await api.post('/auth/demo', { role });
+      if (res.data.success) {
+        const { token: newToken, user: newUser } = res.data;
+        setToken(newToken);
+        setUser(newUser);
+        localStorage.setItem('rentalproof_token', newToken);
+        localStorage.setItem('rentalproof_user', JSON.stringify(newUser));
+        showToast(`Signed in as ${newUser.name}`, 'success');
+        return { success: true, user: newUser };
+      }
+    } catch (error) {
+      // Fallback to standard login attempt
+      const fallbackCreds = {
+        landlord: { email: 'landlord@rentalproof.com', password: 'Password123!' },
+        tenant: { email: 'tenant@rentalproof.com', password: 'Password123!' },
+        service_provider: { email: 'service@rentalproof.com', password: 'Password123!' },
+        admin: { email: 'admin@rentalproof.com', password: 'Password123!' },
+      };
+      const targetCreds = fallbackCreds[role];
+      if (targetCreds) {
+        return await login(targetCreds.email, targetCreds.password);
+      }
+      const message = error.response?.data?.message || 'Demo login failed.';
+      showToast(message, 'error');
+      return { success: false, message };
+    }
   };
 
   const register = async (formData) => {
@@ -77,7 +97,7 @@ export const AuthProvider = ({ children }) => {
         setUser(newUser);
         localStorage.setItem('rentalproof_token', newToken);
         localStorage.setItem('rentalproof_user', JSON.stringify(newUser));
-        showToast('Registration successful! Welcome to RentalProof.', 'success');
+        showToast('Registration successful! Welcome.', 'success');
         return { success: true, user: newUser };
       }
     } catch (error) {
@@ -87,12 +107,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const logout = () => {
+  const logout = (notify = true) => {
     setUser(null);
     setToken(null);
     localStorage.removeItem('rentalproof_token');
     localStorage.removeItem('rentalproof_user');
-    showToast('You have been logged out.', 'info');
+    if (notify) {
+      showToast('You have been signed out.', 'info');
+    }
   };
 
   const updateUser = (updatedUser) => {
