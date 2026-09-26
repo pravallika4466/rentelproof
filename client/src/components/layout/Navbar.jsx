@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Bell,
   Search,
   User as UserIcon,
   LogOut,
-  ShieldCheck,
   Menu,
   CheckCheck,
   Sparkles,
+  Command,
+  LayoutGrid,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useNotifications } from '../../context/NotificationContext';
@@ -20,6 +21,7 @@ const Navbar = ({ onOpenSidebar }) => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const roleColors = {
     landlord: 'primary',
@@ -29,14 +31,22 @@ const Navbar = ({ onOpenSidebar }) => {
   };
 
   const roleLabels = {
-    landlord: 'Landlord Portal',
+    landlord: 'Landlord Workspace',
     tenant: 'Tenant Portal',
     service_provider: 'Service Technician',
-    admin: 'Administrator',
+    admin: 'Platform Admin',
+  };
+
+  // Get current section name from pathname
+  const getSectionName = () => {
+    const path = location.pathname.split('/')[1];
+    if (!path || path === 'dashboard') return 'Overview';
+    return path.charAt(0).toUpperCase() + path.slice(1).replace('-', ' ');
   };
 
   return (
     <header className="sticky top-0 z-30 flex h-16 w-full items-center justify-between border-b border-slate-200/80 bg-white/95 px-4 sm:px-6 backdrop-blur-md transition-all">
+      {/* Left: Mobile Toggle & Minimal Clean Workspace Breadcrumb (NO RentalProof text logo) */}
       <div className="flex items-center gap-3">
         <button
           onClick={onOpenSidebar}
@@ -46,26 +56,22 @@ const Navbar = ({ onOpenSidebar }) => {
           <Menu className="w-5 h-5" />
         </button>
 
-        <Link to="/dashboard" className="flex items-center gap-3 group">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform duration-200">
-            <ShieldCheck className="w-5 h-5" />
+        <Link to="/dashboard" className="flex items-center gap-2.5 group">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-emerald-400 border border-slate-800 shadow-sm group-hover:border-emerald-500/50 transition-colors">
+            <LayoutGrid className="w-4 h-4" />
           </div>
-          <div className="hidden sm:block">
-            <div className="flex items-center gap-1.5">
-              <span className="text-lg font-bold tracking-tight text-slate-900">RentalProof</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-bold border border-emerald-200">2.0</span>
-            </div>
-            <span className="block text-[10px] uppercase font-bold tracking-wider text-emerald-700 -mt-0.5">
-              Digital Evidence Platform
-            </span>
+          <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+            <span className="text-slate-400 font-normal">/</span>
+            <span className="font-bold text-slate-900 tracking-tight">{getSectionName()}</span>
           </div>
         </Link>
       </div>
 
+      {/* Right Actions */}
       <div className="flex items-center gap-2 sm:gap-4">
         {/* User Role Badge */}
         {user && (
-          <Badge variant={roleColors[user.role] || 'primary'} size="md" dot className="hidden sm:inline-flex shadow-2xs">
+          <Badge variant={roleColors[user.role] || 'primary'} size="md" dot className="hidden sm:inline-flex shadow-2xs font-semibold">
             {roleLabels[user.role] || user.role}
           </Badge>
         )}
@@ -99,7 +105,7 @@ const Navbar = ({ onOpenSidebar }) => {
                 <div className="flex items-center gap-2">
                   <h4 className="font-semibold text-slate-900 text-sm">Notifications</h4>
                   {unreadCount > 0 && (
-                    <span className="text-xs bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">
+                    <span className="text-xs bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-semibold">
                       {unreadCount} new
                     </span>
                   )}
@@ -107,7 +113,7 @@ const Navbar = ({ onOpenSidebar }) => {
                 {unreadCount > 0 && (
                   <button
                     onClick={markAllAsRead}
-                    className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1 transition"
+                    className="text-xs text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1 transition cursor-pointer"
                   >
                     <CheckCheck className="w-3.5 h-3.5" /> Mark all read
                   </button>

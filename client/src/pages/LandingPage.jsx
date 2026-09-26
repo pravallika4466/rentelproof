@@ -21,6 +21,8 @@ import {
   Star,
   PlayCircle,
   ExternalLink,
+  Layers,
+  Fingerprint,
 } from 'lucide-react';
 import Button from '../components/common/Button';
 import Card, { CardBody } from '../components/common/Card';
@@ -28,32 +30,26 @@ import Badge from '../components/common/Badge';
 import InteractiveMeshCanvas from '../components/common/InteractiveMeshCanvas';
 
 const LandingPage = () => {
-  const [sliderPos, setSliderPos] = useState(50);
   const [depositAmount, setDepositAmount] = useState(1500);
 
   return (
     <div className="min-h-screen bg-white text-slate-900 font-sans selection:bg-emerald-500 selection:text-white">
-      {/* Navigation Header */}
+      {/* Navigation Header (Clean, minimal top bar without text logo branding) */}
       <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-slate-100 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-800 text-white shadow-md shadow-emerald-600/20 group-hover:scale-105 transition-transform">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <span className="text-xl font-bold tracking-tight text-slate-900">RentalProof</span>
-              <span className="hidden sm:inline-block ml-2 text-[10px] uppercase font-bold tracking-widest text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                Evidence Platform
-              </span>
-            </div>
-          </Link>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 text-emerald-400 border border-slate-800 shadow-sm group-hover:border-emerald-500/50 transition-colors">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+            </Link>
 
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
-            <a href="#features" className="hover:text-emerald-700 transition">Features</a>
-            <a href="#comparison" className="hover:text-emerald-700 transition">Comparison</a>
-            <a href="#how-it-works" className="hover:text-emerald-700 transition">How It Works</a>
-            <a href="#calculator" className="hover:text-emerald-700 transition">Protection ROI</a>
-          </nav>
+            <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600">
+              <a href="#features" className="hover:text-emerald-800 transition">Features</a>
+              <a href="#how-it-works" className="hover:text-emerald-800 transition">How It Works</a>
+              <a href="#calculator" className="hover:text-emerald-800 transition">Protection ROI</a>
+            </nav>
+          </div>
 
           <div className="flex items-center gap-3">
             <Link to="/login">
@@ -71,17 +67,17 @@ const LandingPage = () => {
       </header>
 
       {/* Hero Section with Interactive 3D Mesh Background */}
-      <section className="relative overflow-hidden pt-12 sm:pt-20 pb-24 sm:pb-32 bg-gradient-to-b from-emerald-50/50 via-white to-white">
+      <section className="relative overflow-hidden pt-12 sm:pt-20 pb-24 sm:pb-32 bg-gradient-to-b from-emerald-50/40 via-white to-white">
         {/* Interactive Canvas Background */}
         <div className="absolute inset-0 pointer-events-auto opacity-70 z-0">
-          <InteractiveMeshCanvas particleCount={40} particleColor="rgba(16, 185, 129, 0.5)" lineColor="rgba(16, 185, 129, 0.15)" />
+          <InteractiveMeshCanvas particleCount={40} particleColor="rgba(16, 185, 129, 0.45)" lineColor="rgba(16, 185, 129, 0.12)" />
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-800 text-xs font-bold mb-6 shadow-2xs animate-fade-in">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-emerald-900 text-xs font-bold mb-6 shadow-2xs">
             <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Digital Rental Condition & Deposit Protection Platform</span>
+            <span>Digital Condition Evidence & Deposit Protection</span>
           </div>
 
           {/* Main Headline */}
@@ -94,7 +90,7 @@ const LandingPage = () => {
 
           {/* Subtitle */}
           <p className="text-base sm:text-xl text-slate-600 max-w-2xl mx-auto mt-6 leading-relaxed">
-            RentalProof creates a transparent, tamper-evident digital ledger of property condition, photo evidence, maintenance logs, and deposits from move-in to move-out.
+            Create a transparent, tamper-evident digital record of property condition, photo evidence, maintenance logs, and security deposits from move-in to move-out.
           </p>
 
           {/* CTA Buttons */}
@@ -110,11 +106,11 @@ const LandingPage = () => {
               </Button>
             </Link>
 
-            {/* FIXED "Explore Demo Portals" Button */}
+            {/* High-Contrast "Explore Demo Portals" Button */}
             <Link to="/login">
               <button
                 type="button"
-                className="group relative inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 border border-slate-700 hover:border-emerald-500/50 active:scale-[0.98] cursor-pointer"
+                className="group relative inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-xl bg-slate-950 hover:bg-slate-900 text-white font-semibold text-base shadow-md hover:shadow-lg transition-all duration-200 border border-slate-800 hover:border-emerald-500/50 active:scale-[0.98] cursor-pointer"
               >
                 <PlayCircle className="w-5 h-5 text-emerald-400 group-hover:scale-110 transition-transform" />
                 <span>Explore Demo Portals</span>
@@ -137,7 +133,7 @@ const LandingPage = () => {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>Multi-Role Access (Landlord & Tenant)</span>
+              <span>Multi-Role Access (Landlord, Tenant, Technician)</span>
             </div>
           </div>
 
@@ -150,12 +146,12 @@ const LandingPage = () => {
                   <div className="w-3 h-3 rounded-full bg-amber-400"></div>
                   <div className="w-3 h-3 rounded-full bg-emerald-400"></div>
                   <span className="text-xs text-slate-500 font-mono ml-2 hidden sm:inline">
-                    rentalproof.app/inspections/compare/suite-402
+                    app.verified/inspections/compare
                   </span>
                 </div>
                 <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
                   <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                  <span>Tamper-Proof Verification Verified</span>
+                  <span>Tamper-Proof Verification Active</span>
                 </div>
               </div>
 
@@ -203,13 +199,13 @@ const LandingPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <Badge variant="primary" size="md" className="mb-3">
-              Comprehensive Features
+              Comprehensive Capabilities
             </Badge>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-              Everything Needed for Complete Rental Transparency
+              Designed for Complete Rental Transparency
             </h2>
             <p className="text-slate-600 mt-4 text-base sm:text-lg">
-              Designed to protect both landlords and tenants with tamper-proof evidence, automated workflows, and crystal-clear records.
+              Structured to protect both landlords and tenants with tamper-proof evidence, automated workflows, and crystal-clear records.
             </p>
           </div>
 
@@ -294,7 +290,7 @@ const LandingPage = () => {
               From Move-In to Deposit Return
             </h2>
             <p className="text-slate-600 mt-4 text-base sm:text-lg">
-              RentalProof eliminates ambiguity at every milestone of the tenancy lifecycle.
+              Eliminate ambiguity at every milestone of the tenancy lifecycle.
             </p>
           </div>
 
@@ -344,7 +340,7 @@ const LandingPage = () => {
                 Calculate Protected Value for Your Tenancy
               </h2>
               <p className="text-sm text-slate-600 mt-2">
-                Estimate how RentalProof protects against unjustified deductions and disputed claims.
+                Estimate how photographic records protect against unjustified deductions and disputed claims.
               </p>
             </div>
 
@@ -371,7 +367,7 @@ const LandingPage = () => {
                   <p className="text-2xl font-extrabold text-emerald-700 mt-1">Reduced by 98%</p>
                 </div>
                 <div className="p-4 rounded-xl bg-slate-900 text-white text-center">
-                  <p className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Estimated Savings & Proof Value</p>
+                  <p className="text-xs font-semibold text-slate-300 uppercase tracking-wider">Estimated Protection Value</p>
                   <p className="text-2xl font-extrabold text-emerald-400 mt-1">${(depositAmount * 0.95).toFixed(0)}</p>
                 </div>
               </div>
@@ -384,7 +380,7 @@ const LandingPage = () => {
       <section className="py-24 bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 text-white text-center relative overflow-hidden border-t border-slate-800">
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6">
           <Badge variant="dark" size="md" className="mb-4 text-emerald-400 border-emerald-500/30">
-            Start Today
+            Get Started
           </Badge>
           <h2 className="text-3xl sm:text-5xl font-extrabold tracking-tight">
             Start Documenting Your Rental Journey Today.
@@ -405,7 +401,7 @@ const LandingPage = () => {
               </Button>
             </Link>
 
-            {/* FIXED "Explore Demo Portals" Button (Bottom CTA) */}
+            {/* High-Contrast "Explore Demo Portals" Button */}
             <Link to="/login">
               <button
                 type="button"
@@ -426,13 +422,10 @@ const LandingPage = () => {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-700 text-white">
               <ShieldCheck className="w-4 h-4" />
             </div>
-            <div>
-              <span className="font-bold text-slate-900 text-sm">RentalProof</span>
-              <p className="text-[11px] text-slate-500">Digital Rental Condition, Evidence & Deposit Protection Platform</p>
-            </div>
+            <p className="text-[11px] text-slate-500">Digital Rental Condition, Evidence & Deposit Protection Platform</p>
           </div>
           <div className="text-slate-500">
-            © {new Date().getFullYear()} RentalProof Platform. All rights reserved.
+            © {new Date().getFullYear()} All rights reserved.
           </div>
         </div>
       </footer>

@@ -47,15 +47,9 @@ const LoginPage = () => {
       </div>
 
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
+        <Link to="/" className="inline-flex items-center justify-center mb-6 group">
           <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center text-white shadow-lg shadow-emerald-600/30 group-hover:scale-105 transition-transform">
             <ShieldCheck className="w-7 h-7" />
-          </div>
-          <div className="text-left">
-            <span className="text-2xl font-black tracking-tight text-slate-900 block">RentalProof</span>
-            <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-700 block -mt-1">
-              Evidence Platform
-            </span>
           </div>
         </Link>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Sign in to your account</h2>
@@ -68,7 +62,7 @@ const LoginPage = () => {
       </div>
 
       <div className="relative z-10 mt-8 sm:mx-auto sm:w-full sm:max-w-lg px-4">
-        {/* Quick 1-Click Demo Logins for Instant Exploration */}
+        {/* Quick 1-Click Demo Logins */}
         <div className="bg-gradient-to-br from-slate-950 via-slate-900 to-zinc-950 p-6 rounded-3xl text-white shadow-xl mb-6 border border-slate-800">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -78,11 +72,11 @@ const LoginPage = () => {
               </span>
             </div>
             <span className="text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-700/50 px-2 py-0.5 rounded-full font-semibold">
-              Instant Exploration
+              Instant Access
             </span>
           </div>
           <p className="text-xs text-slate-300 mb-4 leading-relaxed">
-            Click any role to test the platform instantly:
+            Select a role to test the application instantly:
           </p>
 
           <div className="grid grid-cols-2 gap-2.5">

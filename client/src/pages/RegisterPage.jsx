@@ -60,15 +60,9 @@ const RegisterPage = () => {
       </div>
 
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-3 mb-6 group">
+        <Link to="/" className="inline-flex items-center justify-center mb-6 group">
           <div className="h-12 w-12 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-800 flex items-center justify-center text-white shadow-lg shadow-emerald-600/30 group-hover:scale-105 transition-transform">
             <ShieldCheck className="w-7 h-7" />
-          </div>
-          <div className="text-left">
-            <span className="text-2xl font-black tracking-tight text-slate-900 block">RentalProof</span>
-            <span className="text-[10px] uppercase font-bold tracking-widest text-emerald-700 block -mt-1">
-              Evidence Platform
-            </span>
           </div>
         </Link>
         <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Create your account</h2>
@@ -128,7 +122,7 @@ const RegisterPage = () => {
                   required
                   value={formData.name}
                   onChange={handleChange}
-                  placeholder="e.g. Pravallika"
+                  placeholder="e.g. Alex Taylor"
                   className="block w-full rounded-xl border border-slate-300 pl-10 pr-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-emerald-600 focus:ring-4 focus:ring-emerald-100 transition"
                 />
               </div>
