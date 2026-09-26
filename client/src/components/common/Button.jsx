@@ -16,21 +16,24 @@ const Button = ({
   const sizeClasses = {
     sm: 'text-xs px-3 py-1.5 rounded-lg gap-1.5 font-medium',
     md: 'text-sm px-4 py-2.5 rounded-xl gap-2 font-medium',
-    lg: 'text-base px-6 py-3 rounded-xl gap-2.5 font-semibold',
+    lg: 'text-base px-6 py-3.5 rounded-xl gap-2.5 font-semibold',
   };
 
   const variantClasses = {
     primary:
-      'bg-brand-600 hover:bg-brand-700 text-white shadow-sm hover:shadow active:scale-[0.99] transition focus:ring-4 focus:ring-brand-100',
+      'bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-500 hover:to-emerald-600 text-white shadow-sm hover:shadow-emerald-glow active:scale-[0.98] transition-all duration-200 focus:ring-4 focus:ring-emerald-100 border border-emerald-500/20',
     secondary:
-      'bg-slate-900 hover:bg-slate-800 text-white shadow-sm hover:shadow active:scale-[0.99] transition focus:ring-4 focus:ring-slate-100',
+      'bg-slate-900 hover:bg-slate-800 text-white shadow-sm hover:shadow active:scale-[0.98] transition-all duration-200 focus:ring-4 focus:ring-slate-100 border border-slate-800',
     outline:
-      'bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 shadow-sm active:scale-[0.99] transition focus:ring-4 focus:ring-slate-100',
+      'bg-white hover:bg-slate-50 text-slate-700 border border-slate-200 hover:border-slate-300 shadow-sm active:scale-[0.98] transition-all duration-200 focus:ring-4 focus:ring-slate-100',
     danger:
-      'bg-rose-600 hover:bg-rose-700 text-white shadow-sm hover:shadow active:scale-[0.99] transition focus:ring-4 focus:ring-rose-100',
-    ghost: 'hover:bg-slate-100 text-slate-700 active:scale-[0.99] transition',
-    success:
-      'bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm hover:shadow active:scale-[0.99] transition focus:ring-4 focus:ring-emerald-100',
+      'bg-rose-600 hover:bg-rose-700 text-white shadow-sm hover:shadow active:scale-[0.98] transition-all duration-200 focus:ring-4 focus:ring-rose-100',
+    ghost:
+      'hover:bg-slate-100 text-slate-700 hover:text-emerald-800 active:scale-[0.98] transition-all duration-200',
+    accent:
+      'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-white shadow-sm hover:shadow-amber-glow active:scale-[0.98] transition-all duration-200 focus:ring-4 focus:ring-amber-100 border border-amber-400/20',
+    glow:
+      'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-glow hover:shadow-lg active:scale-[0.98] transition-all duration-200 focus:ring-4 focus:ring-emerald-200 font-semibold',
   };
 
   return (
@@ -38,7 +41,7 @@ const Button = ({
       type={type}
       disabled={disabled || loading}
       onClick={onClick}
-      className={`inline-flex items-center justify-center select-none transition-all disabled:opacity-50 disabled:pointer-events-none ${sizeClasses[size]} ${variantClasses[variant]} ${className}`}
+      className={`inline-flex items-center justify-center select-none disabled:opacity-50 disabled:pointer-events-none cursor-pointer ${sizeClasses[size]} ${variantClasses[variant] || variantClasses.primary} ${className}`}
       {...props}
     >
       {loading ? (

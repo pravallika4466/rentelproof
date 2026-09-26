@@ -208,7 +208,7 @@ const ComparisonPage = () => {
             <div>
               <span className="text-slate-400 block text-[11px]">Move-Out Walkthrough</span>
               <span className="font-bold text-slate-800 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-indigo-600" />
+                <Calendar className="w-3.5 h-3.5 text-amber-600" />
                 {new Date(comparisonData.moveOutInspection.inspectionDate).toLocaleDateString()}
               </span>
             </div>

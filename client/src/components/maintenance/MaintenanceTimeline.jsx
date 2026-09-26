@@ -8,15 +8,15 @@ const MaintenanceTimeline = ({ timeline = [], completionPhotos = [], completionN
   const getStatusIcon = (status) => {
     switch (status) {
       case 'Reported':
-        return <AlertCircle className="w-4 h-4 text-blue-500" />;
+        return <AlertCircle className="w-4 h-4 text-amber-600" />;
       case 'Reviewed':
-        return <UserCheck className="w-4 h-4 text-indigo-500" />;
+        return <UserCheck className="w-4 h-4 text-teal-600" />;
       case 'Assigned':
-        return <Wrench className="w-4 h-4 text-purple-500" />;
+        return <Wrench className="w-4 h-4 text-purple-600" />;
       case 'In Progress':
         return <Clock className="w-4 h-4 text-amber-500" />;
       case 'Completed':
-        return <CheckCircle2 className="w-4 h-4 text-emerald-500" />;
+        return <CheckCircle2 className="w-4 h-4 text-emerald-600" />;
       default:
         return <Clock className="w-4 h-4 text-slate-400" />;
     }
@@ -25,9 +25,9 @@ const MaintenanceTimeline = ({ timeline = [], completionPhotos = [], completionN
   const getDotBg = (status) => {
     switch (status) {
       case 'Reported':
-        return 'bg-blue-50 border-blue-200';
+        return 'bg-amber-50 border-amber-200';
       case 'Reviewed':
-        return 'bg-indigo-50 border-indigo-200';
+        return 'bg-teal-50 border-teal-200';
       case 'Assigned':
         return 'bg-purple-50 border-purple-200';
       case 'In Progress':

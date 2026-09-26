@@ -93,7 +93,7 @@ const DashboardPage = () => {
 
   // Analytics data for Recharts
   const occupancyData = [
-    { name: 'Occupied', value: data.properties.filter((p) => p.status === 'Occupied').length, color: '#2563eb' },
+    { name: 'Occupied', value: data.properties.filter((p) => p.status === 'Occupied').length, color: '#059669' },
     { name: 'Available', value: data.properties.filter((p) => p.status === 'Available').length, color: '#10b981' },
     {
       name: 'Maintenance',
@@ -121,10 +121,10 @@ const DashboardPage = () => {
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
-      <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-brand-900 via-slate-900 to-indigo-950 p-6 sm:p-8 rounded-3xl text-white shadow-xl">
+      <div className="flex flex-wrap items-center justify-between gap-4 bg-gradient-to-r from-slate-950 via-slate-900 to-zinc-950 p-6 sm:p-8 rounded-3xl text-white shadow-xl border border-slate-800">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-500/20 text-brand-300 text-xs font-bold mb-2">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-bold mb-2 border border-emerald-500/30">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-400" />
             <span>Digital Evidence Ecosystem</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
@@ -260,7 +260,7 @@ const DashboardPage = () => {
                       formatter={(val) => [`₹${Number(val).toLocaleString('en-IN')}`, 'Rent Collected']}
                       contentStyle={{ borderRadius: '12px', border: '1px solid #e2e8f0' }}
                     />
-                    <Bar dataKey="amount" fill="#2563eb" radius={[6, 6, 0, 0]} />
+                    <Bar dataKey="amount" fill="#059669" radius={[6, 6, 0, 0]} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>
@@ -447,9 +447,9 @@ const DashboardPage = () => {
                   <span className="font-bold">Verified</span>
                 </div>
 
-                <div className="flex items-center justify-between p-3 rounded-xl bg-blue-50 text-blue-900 border border-blue-100 text-xs">
+                <div className="flex items-center justify-between p-3 rounded-xl bg-teal-50 text-teal-900 border border-teal-100 text-xs">
                   <div className="flex items-center gap-2">
-                    <CreditCard className="w-4 h-4 text-blue-600" />
+                    <CreditCard className="w-4 h-4 text-teal-600" />
                     <span>September Rent Status</span>
                   </div>
                   <span className="font-bold">Paid</span>

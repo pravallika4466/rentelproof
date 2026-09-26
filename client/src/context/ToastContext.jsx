@@ -22,17 +22,17 @@ export const ToastProvider = ({ children }) => {
   }, []);
 
   const icons = {
-    success: <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0" />,
-    error: <AlertCircle className="w-5 h-5 text-rose-500 shrink-0" />,
-    warning: <AlertTriangle className="w-5 h-5 text-amber-500 shrink-0" />,
-    info: <Info className="w-5 h-5 text-blue-500 shrink-0" />,
+    success: <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />,
+    error: <AlertCircle className="w-5 h-5 text-rose-600 shrink-0" />,
+    warning: <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0" />,
+    info: <Info className="w-5 h-5 text-emerald-700 shrink-0" />,
   };
 
   const bgStyles = {
-    success: 'bg-emerald-50 border-emerald-200 text-emerald-900',
-    error: 'bg-rose-50 border-rose-200 text-rose-900',
-    warning: 'bg-amber-50 border-amber-200 text-amber-900',
-    info: 'bg-blue-50 border-blue-200 text-blue-900',
+    success: 'bg-emerald-50 border-emerald-300 text-emerald-950 shadow-emerald-500/10',
+    error: 'bg-rose-50 border-rose-300 text-rose-950 shadow-rose-500/10',
+    warning: 'bg-amber-50 border-amber-300 text-amber-950 shadow-amber-500/10',
+    info: 'bg-slate-900 border-slate-700 text-white shadow-xl',
   };
 
   return (
@@ -43,13 +43,13 @@ export const ToastProvider = ({ children }) => {
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className={`pointer-events-auto flex items-start gap-3 p-4 rounded-xl border shadow-lg transition-all transform animate-in slide-in-from-bottom-5 duration-200 ${bgStyles[toast.type]}`}
+            className={`pointer-events-auto flex items-start gap-3 p-4 rounded-2xl border shadow-xl transition-all transform animate-in slide-in-from-bottom-5 duration-200 ${bgStyles[toast.type] || bgStyles.info}`}
           >
             {icons[toast.type]}
             <div className="flex-1 text-sm font-medium leading-relaxed">{toast.message}</div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-slate-400 hover:text-slate-700 transition p-0.5 rounded-lg"
+              className="text-slate-400 hover:text-slate-200 transition p-0.5 rounded-lg cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
