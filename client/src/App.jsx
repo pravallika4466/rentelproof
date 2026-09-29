@@ -29,18 +29,17 @@ import DocumentsPage from './pages/DocumentsPage';
 import ReportsPage from './pages/ReportsPage';
 import AuditLogsPage from './pages/AuditLogsPage';
 import ProfilePage from './pages/ProfilePage';
+import SettingsPage from './pages/SettingsPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
+
+import CinematicLoader from './components/common/CinematicLoader';
 
 // Protected Route Guard
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { isAuthenticated, user, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div>
-      </div>
-    );
+    return <CinematicLoader fullScreen message="Authenticating credentials..." />;
   }
 
   if (!isAuthenticated) {
@@ -59,11 +58,7 @@ const PublicRoute = ({ children }) => {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="h-screen w-screen flex items-center justify-center bg-slate-50">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div>
-      </div>
-    );
+    return <CinematicLoader fullScreen message="Initializing session..." />;
   }
 
   if (isAuthenticated) {
@@ -75,7 +70,7 @@ const PublicRoute = ({ children }) => {
 
 function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <Routes>
         {/* Public Routes */}
         <Route path="/" element={<LandingPage />} />
@@ -140,6 +135,7 @@ function App() {
           <Route path="/reports" element={<ReportsPage />} />
           <Route path="/audit-logs" element={<AuditLogsPage />} />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/settings" element={<SettingsPage />} />
 
           {/* Admin Routes */}
           <Route

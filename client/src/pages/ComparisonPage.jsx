@@ -18,7 +18,9 @@ import { useToast } from '../context/ToastContext';
 import ImageCompareSlider from '../components/inspection/ImageCompareSlider';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
-import { CardSkeleton } from '../components/common/Skeleton';
+import { SkeletonCard } from '../components/common/CinematicLoader';
+import CinematicPageTransition from '../components/common/CinematicPageTransition';
+import TiltCard from '../components/common/TiltCard';
 
 const ComparisonPage = () => {
   const [searchParams] = useSearchParams();
@@ -91,7 +93,6 @@ const ComparisonPage = () => {
 
       if (res.data.success) {
         showToast(`AI analysis completed for ${compItem.item}!`, 'success');
-        // Update local state with the AI observation
         setComparisonData((prev) => {
           if (!prev) return prev;
           const updatedComparisons = prev.comparisons.map((c) => {
@@ -125,23 +126,24 @@ const ComparisonPage = () => {
     : [];
 
   return (
-    <div className="space-y-6">
+    <CinematicPageTransition>
+      <div className="space-y-6 animate-fade-in">
       {/* Page Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-xs font-bold uppercase tracking-wider text-brand-600">
+            <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 font-mono">
               Signature Proof Engine
             </span>
-            <span className="text-slate-300">•</span>
+            <span className="text-dark-300 dark:text-dark-600">•</span>
             <Badge variant="primary" size="sm">
               Tamper-Evident
             </Badge>
           </div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-dark-950 dark:text-white tracking-tight">
             Before vs After Evidence Comparison
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+          <p className="text-xs sm:text-sm text-dark-500 dark:text-dark-400 mt-0.5">
             Photographic baseline overlay & algorithmic observation review
           </p>
         </div>
@@ -152,7 +154,7 @@ const ComparisonPage = () => {
             <select
               value={selectedMoveOutId}
               onChange={(e) => setSelectedMoveOutId(e.target.value)}
-              className="text-xs rounded-xl border border-slate-300 px-3 py-2 bg-white text-slate-800 font-semibold focus:outline-none"
+              className="text-xs rounded-xl glass-input px-3 py-2 text-dark-800 dark:text-dark-200 font-semibold focus:outline-none cursor-pointer"
             >
               {inspectionsList.map((insp) => (
                 <option key={insp._id} value={insp._id}>
@@ -174,24 +176,24 @@ const ComparisonPage = () => {
       </div>
 
       {/* Product Principle Ethical Banner */}
-      <div className="p-4 rounded-2xl bg-amber-50/80 border border-amber-200 text-amber-900 flex items-start gap-3 text-xs leading-relaxed">
-        <HelpCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+      <div className="p-4 rounded-2xl bg-accent-500/10 border border-accent-500/20 text-accent-700 dark:text-accent-300 flex items-start gap-3 text-xs leading-relaxed">
+        <HelpCircle className="w-5 h-5 text-accent-500 shrink-0 mt-0.5" />
         <div>
-          <span className="font-bold block mb-0.5">RentalProof Evidence Notice:</span>
-          This tool presents chronological photographic records side-by-side. Attention indicators and AI observations exist solely to highlight visual variations for objective human review. They do not constitute legal rulings or automated determinations of liability.
+          <span className="font-bold block mb-0.5">RentalProof Evidence Protocol:</span>
+          This tool presents chronological photographic records side-by-side. Attention indicators and AI observations exist solely to highlight visual variations for objective human review. They do not constitute legal rulings or automated liability claims.
         </div>
       </div>
 
       {/* Property & Inspection Header Card */}
       {comparisonData && (
-        <div className="bg-white p-6 rounded-3xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-4">
+        <div className="p-6 rounded-3xl glass-card flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-brand-50 text-brand-600 rounded-2xl">
+            <div className="p-3 bg-brand-500/10 text-brand-600 dark:text-brand-400 rounded-2xl border border-brand-500/20 shadow-emerald-glow">
               <Building2 className="w-6 h-6" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-slate-900">{comparisonData.property?.title}</h2>
-              <p className="text-xs text-slate-500">
+              <h2 className="text-base font-bold text-dark-950 dark:text-white">{comparisonData.property?.title}</h2>
+              <p className="text-xs text-dark-500 dark:text-dark-400">
                 {comparisonData.property?.address}, {comparisonData.property?.city}
               </p>
             </div>
@@ -199,22 +201,22 @@ const ComparisonPage = () => {
 
           <div className="flex flex-wrap items-center gap-6 text-xs">
             <div>
-              <span className="text-slate-400 block text-[11px]">Move-In Baseline</span>
-              <span className="font-bold text-slate-800 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-brand-600" />
+              <span className="text-dark-400 block text-[11px]">Move-In Baseline</span>
+              <span className="font-bold text-dark-800 dark:text-dark-200 flex items-center gap-1 font-mono">
+                <Calendar className="w-3.5 h-3.5 text-brand-500" />
                 {new Date(comparisonData.moveInInspection.inspectionDate).toLocaleDateString()}
               </span>
             </div>
             <div>
-              <span className="text-slate-400 block text-[11px]">Move-Out Walkthrough</span>
-              <span className="font-bold text-slate-800 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5 text-amber-600" />
+              <span className="text-dark-400 block text-[11px]">Move-Out Walkthrough</span>
+              <span className="font-bold text-dark-800 dark:text-dark-200 flex items-center gap-1 font-mono">
+                <Calendar className="w-3.5 h-3.5 text-accent-500" />
                 {new Date(comparisonData.moveOutInspection.inspectionDate).toLocaleDateString()}
               </span>
             </div>
             <div>
-              <span className="text-slate-400 block text-[11px]">Total Paired Fixtures</span>
-              <span className="font-bold text-slate-800">
+              <span className="text-dark-400 block text-[11px]">Total Paired Fixtures</span>
+              <span className="font-bold text-dark-800 dark:text-dark-200 font-mono">
                 {comparisonData.comparisons?.length || 0} Inspected Items
               </span>
             </div>
@@ -222,56 +224,49 @@ const ComparisonPage = () => {
         </div>
       )}
 
-      {/* Category Filter Pills */}
-      {comparisonData && categories.length > 2 && (
+      {/* Filter Category Pills */}
+      {categories.length > 1 && (
         <div className="flex flex-wrap items-center gap-2">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setCategoryFilter(cat)}
-              className={`px-4 py-1.5 rounded-full text-xs font-bold transition ${
+              className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition capitalize cursor-pointer interactive ${
                 categoryFilter === cat
-                  ? 'bg-brand-600 text-white shadow-sm'
-                  : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
+                  ? 'bg-brand-500 text-white shadow-emerald-glow'
+                  : 'glass-panel text-dark-600 dark:text-dark-300 hover:border-brand-500/40'
               }`}
             >
-              {cat === 'all' ? 'All Rooms' : cat}
+              {cat === 'all' ? 'All Rooms & Fixtures' : cat}
             </button>
           ))}
         </div>
       )}
 
-      {/* Comparisons Stage */}
+      {/* Sliders List */}
       {loading ? (
-        <div className="space-y-6">
-          <CardSkeleton />
-          <CardSkeleton />
-        </div>
-      ) : !comparisonData || filteredComparisons.length === 0 ? (
-        <div className="bg-white p-12 text-center rounded-3xl border border-dashed border-slate-300">
-          <SplitSquareVertical className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-          <h3 className="text-base font-bold text-slate-800">No paired evidence records found</h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-            Ensure a Move-Out walkthrough has been recorded with reference to a Move-In baseline.
-          </p>
+        <SkeletonCard count={3} />
+      ) : filteredComparisons.length === 0 ? (
+        <div className="p-12 text-center rounded-3xl glass-card text-xs text-dark-500">
+          No paired inspection items found for comparison.
         </div>
       ) : (
-        <div className="space-y-8">
-          {filteredComparisons.map((comp, idx) => (
+        <div className="space-y-6">
+          {filteredComparisons.map((comp) => (
             <ImageCompareSlider
-              key={idx}
+              key={comp.moveOutItemId}
               category={comp.category}
               item={comp.item}
               moveInImage={comp.moveIn?.photos?.[0]}
               moveOutImage={comp.moveOut?.photos?.[0]}
               moveInCondition={comp.moveIn?.condition}
               moveOutCondition={comp.moveOut?.condition}
-              moveInDate={comp.moveIn?.inspectionDate}
-              moveOutDate={comp.moveOut?.inspectionDate}
+              moveInDate={comparisonData?.moveInInspection?.inspectionDate}
+              moveOutDate={comparisonData?.moveOutInspection?.inspectionDate}
               moveInNotes={comp.moveIn?.notes}
               moveOutNotes={comp.moveOut?.notes}
               attentionLevel={comp.attentionLevel}
-              aiObservation={comp.aiObservation}
+              aiObservation={comp.aiObservation?.notes}
               onRunAiAnalysis={() => handleRunAiAnalysis(comp)}
               analyzing={analyzingItemId === comp.moveOutItemId}
             />
@@ -279,6 +274,7 @@ const ComparisonPage = () => {
         </div>
       )}
     </div>
+  </CinematicPageTransition>
   );
 };
 

@@ -17,14 +17,14 @@ const ConfirmationDialog = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} title={title} maxWidth="max-w-md">
       <div className="flex items-start gap-4 py-2">
-        <div className="p-3 bg-amber-50 text-amber-600 rounded-xl shrink-0 border border-amber-200">
+        <div className="p-3 bg-accent-500/10 text-accent-500 rounded-xl shrink-0 border border-accent-500/20">
           <AlertTriangle className="w-6 h-6" />
         </div>
         <div>
-          <p className="text-sm text-slate-600 leading-relaxed">{message}</p>
+          <p className="text-sm text-dark-600 dark:text-dark-300 leading-relaxed">{message}</p>
         </div>
       </div>
-      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-100">
+      <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-light-300 dark:border-dark-700/70">
         <Button variant="outline" size="sm" onClick={onClose} disabled={loading}>
           {cancelText}
         </Button>

@@ -18,7 +18,9 @@ import { useToast } from '../context/ToastContext';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import ImageModal from '../components/common/ImageModal';
-import { CardSkeleton } from '../components/common/Skeleton';
+import TiltCard from '../components/common/TiltCard';
+import CinematicPageTransition from '../components/common/CinematicPageTransition';
+import { SkeletonCard } from '../components/common/CinematicLoader';
 
 const InspectionDetailPage = () => {
   const { id } = useParams();
@@ -64,14 +66,21 @@ const InspectionDetailPage = () => {
   };
 
   if (loading || !inspection) {
-    return <CardSkeleton />;
+    return (
+      <div className="space-y-6 max-w-5xl mx-auto">
+        <SkeletonCard count={2} />
+      </div>
+    );
   }
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
+    <CinematicPageTransition className="space-y-6 max-w-5xl mx-auto">
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link to="/inspections" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-800 transition">
+        <Link
+          to="/inspections"
+          className="inline-flex items-center gap-2 text-xs font-bold text-dark-500 hover:text-dark-900 dark:hover:text-dark-100 transition interactive"
+        >
           <ArrowLeft className="w-4 h-4" /> Back to Inspections
         </Link>
 
@@ -91,25 +100,26 @@ const InspectionDetailPage = () => {
         </div>
       </div>
 
-      {/* Main Inspection Overview Card */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-100">
+      {/* Main Inspection Overview Card with 3D Tilt */}
+      <TiltCard maxTilt={3} depth={10}>
+        <div className="rounded-3xl glass-card p-6 sm:p-8 shadow-card space-y-6 border border-brand-500/20">
+        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-light-300 dark:border-dark-700/80">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="text-xs font-bold uppercase text-brand-600">
+              <span className="text-xs font-bold uppercase text-brand-600 dark:text-brand-400 font-mono">
                 {inspection.type} Condition Baseline
               </span>
               <Badge variant={inspection.status}>{inspection.status}</Badge>
             </div>
-            <h1 className="text-2xl font-extrabold text-slate-900">{inspection.property?.title}</h1>
-            <p className="text-xs text-slate-500">
+            <h1 className="text-2xl font-extrabold text-dark-950 dark:text-white">{inspection.property?.title}</h1>
+            <p className="text-xs text-dark-500 dark:text-dark-400">
               {inspection.property?.address}, {inspection.property?.city}
             </p>
           </div>
 
           <div className="text-right text-xs">
-            <span className="text-slate-400 block">Inspection Date</span>
-            <span className="text-sm font-bold text-slate-800">
+            <span className="text-dark-400 block font-mono">Inspection Date</span>
+            <span className="text-sm font-bold text-dark-950 dark:text-white font-mono">
               {new Date(inspection.inspectionDate).toLocaleDateString()}
             </span>
           </div>
@@ -117,20 +127,20 @@ const InspectionDetailPage = () => {
 
         {/* Tenant Acknowledgment Banner */}
         {inspection.tenantAcknowledged ? (
-          <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 flex items-start gap-3">
-            <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+          <div className="p-4 rounded-2xl bg-brand-500/10 border border-brand-500/20 text-brand-800 dark:text-brand-300 flex items-start gap-3 text-xs">
+            <CheckCircle2 className="w-5 h-5 text-brand-500 shrink-0 mt-0.5" />
             <div>
-              <span className="text-xs font-bold block">Digitally Verified & Signed by Tenant</span>
-              <p className="text-[11px] text-emerald-700 mt-0.5">
+              <span className="font-bold block">Digitally Verified & Signed by Tenant</span>
+              <p className="text-[11px] text-brand-700 dark:text-brand-400 mt-0.5">
                 Signed on {new Date(inspection.tenantSignedAt).toLocaleString()}. Note: "
                 {inspection.tenantNotes || 'Condition verified in good order.'}"
               </p>
             </div>
           </div>
         ) : isTenant ? (
-          <div className="p-5 rounded-2xl bg-amber-50 border border-amber-200 text-amber-900 space-y-3">
+          <div className="p-5 rounded-2xl bg-accent-500/10 border border-accent-500/20 text-accent-800 dark:text-accent-300 space-y-3">
             <div className="flex items-center gap-2 font-bold text-xs">
-              <Clock className="w-4 h-4 text-amber-600" />
+              <Clock className="w-4 h-4 text-accent-500" />
               <span>Please review and sign off on this condition report</span>
             </div>
             <input
@@ -138,30 +148,30 @@ const InspectionDetailPage = () => {
               placeholder="Add your acknowledgment notes or confirmations..."
               value={tenantNotes}
               onChange={(e) => setTenantNotes(e.target.value)}
-              className="w-full text-xs rounded-xl border border-amber-300 p-2.5 bg-white text-slate-900 focus:outline-none"
+              className="w-full text-xs rounded-xl glass-input p-2.5"
             />
             <Button variant="primary" size="sm" loading={acknowledging} onClick={handleAcknowledge} icon={FileCheck2}>
               Digitally Acknowledge & Sign Report
             </Button>
           </div>
         ) : (
-          <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-200 text-slate-600 text-xs flex items-center gap-2">
-            <Clock className="w-4 h-4 text-slate-400" />
+          <div className="p-3.5 rounded-2xl glass-panel text-dark-600 dark:text-dark-300 text-xs flex items-center gap-2">
+            <Clock className="w-4 h-4 text-dark-400" />
             <span>Awaiting tenant review and digital sign-off signature.</span>
           </div>
         )}
 
         {/* Overall Notes */}
         {inspection.overallNotes && (
-          <div className="p-4 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-700">
+          <div className="p-4 rounded-2xl glass-panel text-xs text-dark-700 dark:text-dark-300">
             <span className="font-bold block mb-1">Inspector Notes:</span>
             {inspection.overallNotes}
           </div>
         )}
 
         {/* Room-by-Room Evidence Items */}
-        <div className="space-y-4 pt-4 border-t border-slate-100">
-          <h3 className="text-base font-bold text-slate-900">
+        <div className="space-y-4 pt-4 border-t border-light-300 dark:border-dark-700/80">
+          <h3 className="text-base font-bold text-dark-950 dark:text-white">
             Photographic Room & Fixture Evidence ({inspection.items?.length || 0})
           </h3>
 
@@ -169,19 +179,21 @@ const InspectionDetailPage = () => {
             {inspection.items?.map((item) => (
               <div
                 key={item._id}
-                className="p-5 rounded-2xl bg-slate-50/70 border border-slate-200/80 hover:border-slate-300 transition"
+                className="p-5 rounded-2xl glass-panel hover:border-brand-500/40 transition"
               >
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold uppercase text-brand-600">{item.category}</span>
-                    <span className="text-slate-300">•</span>
-                    <h4 className="text-sm font-bold text-slate-900">{item.item}</h4>
+                    <span className="text-xs font-bold uppercase text-brand-600 dark:text-brand-400 font-mono">
+                      {item.category}
+                    </span>
+                    <span className="text-dark-300 dark:text-dark-600">•</span>
+                    <h4 className="text-sm font-bold text-dark-950 dark:text-white">{item.item}</h4>
                   </div>
                   <Badge variant={item.condition}>{item.condition}</Badge>
                 </div>
 
                 {item.notes && (
-                  <p className="text-xs text-slate-600 mb-3 italic">"{item.notes}"</p>
+                  <p className="text-xs text-dark-600 dark:text-dark-300 mb-3 italic">"{item.notes}"</p>
                 )}
 
                 {/* Evidence Photos */}
@@ -191,14 +203,14 @@ const InspectionDetailPage = () => {
                       <div
                         key={pIdx}
                         onClick={() => setSelectedPhoto(photo)}
-                        className="relative rounded-xl overflow-hidden border border-slate-200 h-28 w-36 cursor-pointer group shadow-sm hover:shadow"
+                        className="relative rounded-xl overflow-hidden border border-light-400 dark:border-dark-700 h-28 w-36 cursor-pointer group shadow-sm hover:shadow-card-hover"
                       >
                         <img
                           src={photo}
                           alt={`${item.item} Evidence`}
                           className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
                         />
-                        <div className="absolute inset-0 bg-slate-950/20 group-hover:bg-slate-950/0 transition" />
+                        <div className="absolute inset-0 bg-dark-950/20 group-hover:bg-dark-950/0 transition" />
                       </div>
                     ))}
                   </div>
@@ -208,14 +220,15 @@ const InspectionDetailPage = () => {
           </div>
         </div>
       </div>
+      </TiltCard>
 
       <ImageModal
-        isOpen={!!selectedPhoto}
+        isOpen={Boolean(selectedPhoto)}
         onClose={() => setSelectedPhoto(null)}
-        src={selectedPhoto}
+        imageUrl={selectedPhoto}
         title="Evidence Fullscreen View"
       />
-    </div>
+    </CinematicPageTransition>
   );
 };
 

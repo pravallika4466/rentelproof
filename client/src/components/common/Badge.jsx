@@ -9,78 +9,78 @@ const Badge = ({ children, variant = 'default', size = 'md', dot = false, classN
 
   const variantClasses = {
     // General
-    default: 'bg-slate-100 text-slate-700 border-slate-200/80',
-    primary: 'bg-emerald-50 text-emerald-800 border-emerald-200/80',
-    success: 'bg-emerald-50 text-emerald-800 border-emerald-200/80',
-    warning: 'bg-amber-50 text-amber-800 border-amber-200/80',
-    danger: 'bg-rose-50 text-rose-800 border-rose-200/80',
-    purple: 'bg-purple-50 text-purple-800 border-purple-200/80',
-    teal: 'bg-teal-50 text-teal-800 border-teal-200/80',
-    dark: 'bg-slate-900 text-slate-100 border-slate-800',
+    default: 'bg-dark-100 text-dark-700 border-dark-300 dark:bg-dark-800 dark:text-dark-300 dark:border-dark-700',
+    primary: 'bg-brand-500/10 text-brand-700 border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-300 dark:border-brand-500/40',
+    success: 'bg-brand-500/10 text-brand-700 border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-300 dark:border-brand-500/40',
+    warning: 'bg-accent-500/10 text-accent-700 border-accent-500/30 dark:bg-accent-500/15 dark:text-accent-300 dark:border-accent-500/40',
+    danger: 'bg-rose-500/10 text-rose-700 border-rose-500/30 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/40',
+    purple: 'bg-purple-500/10 text-purple-700 border-purple-500/30 dark:bg-purple-500/15 dark:text-purple-300 dark:border-purple-500/40',
+    teal: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/40',
+    dark: 'bg-dark-900 text-dark-100 border-dark-700 dark:bg-dark-950 dark:text-dark-50 dark:border-dark-800',
 
     // Conditions
-    Excellent: 'bg-emerald-50 text-emerald-800 border-emerald-300',
-    Good: 'bg-teal-50 text-teal-800 border-teal-300',
-    Fair: 'bg-amber-50 text-amber-800 border-amber-300',
-    'Needs Attention': 'bg-orange-50 text-orange-800 border-orange-300',
-    Damaged: 'bg-rose-50 text-rose-800 border-rose-300',
+    Excellent: 'bg-brand-500/15 text-brand-700 border-brand-500/40 dark:bg-brand-500/20 dark:text-brand-300 dark:border-brand-500/50',
+    Good: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/40',
+    Fair: 'bg-accent-500/10 text-accent-700 border-accent-500/30 dark:bg-accent-500/15 dark:text-accent-300 dark:border-accent-500/40',
+    'Needs Attention': 'bg-orange-500/10 text-orange-700 border-orange-500/30 dark:bg-orange-500/15 dark:text-orange-300 dark:border-orange-500/40',
+    Damaged: 'bg-rose-500/10 text-rose-700 border-rose-500/30 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/40',
 
     // Attention Levels
-    'No Significant Change': 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    'Possible Change': 'bg-amber-50 text-amber-700 border-amber-200',
-    'Needs Review': 'bg-rose-50 text-rose-700 border-rose-200',
+    'No Significant Change': 'bg-brand-500/10 text-brand-700 border-brand-500/30 dark:bg-brand-500/15 dark:text-brand-300 dark:border-brand-500/40',
+    'Possible Change': 'bg-accent-500/10 text-accent-700 border-accent-500/30 dark:bg-accent-500/15 dark:text-accent-300 dark:border-accent-500/40',
+    'Needs Review': 'bg-rose-500/10 text-rose-700 border-rose-500/30 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/40',
 
     // Maintenance / Statuses
-    Reported: 'bg-slate-100 text-slate-700 border-slate-200',
-    Reviewed: 'bg-teal-50 text-teal-700 border-teal-200',
-    Assigned: 'bg-purple-50 text-purple-700 border-purple-200',
-    'In Progress': 'bg-amber-50 text-amber-700 border-amber-200',
-    Completed: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    Cancelled: 'bg-slate-100 text-slate-600 border-slate-200',
+    Reported: 'bg-dark-100 text-dark-700 border-dark-300 dark:bg-dark-800 dark:text-dark-300 dark:border-dark-700',
+    Reviewed: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/40',
+    Assigned: 'bg-purple-500/10 text-purple-700 border-purple-500/30 dark:bg-purple-500/15 dark:text-purple-300 dark:border-purple-500/40',
+    'In Progress': 'bg-accent-500/10 text-accent-700 border-accent-500/30 dark:bg-accent-500/15 dark:text-accent-300 dark:border-accent-500/40',
+    Completed: 'bg-brand-500/15 text-brand-700 border-brand-500/40 dark:bg-brand-500/20 dark:text-brand-300 dark:border-brand-500/50',
+    Cancelled: 'bg-dark-100 text-dark-500 border-dark-300 dark:bg-dark-800 dark:text-dark-400 dark:border-dark-700',
 
     // Tenancy
-    Active: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    Upcoming: 'bg-teal-50 text-teal-700 border-teal-200',
-    'Ending Soon': 'bg-amber-50 text-amber-700 border-amber-200',
-    Terminated: 'bg-slate-100 text-slate-700 border-slate-200',
+    Active: 'bg-brand-500/15 text-brand-700 border-brand-500/40 dark:bg-brand-500/20 dark:text-brand-300 dark:border-brand-500/50',
+    Upcoming: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/40',
+    'Ending Soon': 'bg-accent-500/10 text-accent-700 border-accent-500/30 dark:bg-accent-500/15 dark:text-accent-300 dark:border-accent-500/40',
+    Terminated: 'bg-dark-100 text-dark-600 border-dark-300 dark:bg-dark-800 dark:text-dark-400 dark:border-dark-700',
 
     // Payment
-    Paid: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    Pending: 'bg-amber-50 text-amber-700 border-amber-200',
-    Late: 'bg-rose-50 text-rose-700 border-rose-200',
-    'Partially Paid': 'bg-purple-50 text-purple-700 border-purple-200',
+    Paid: 'bg-brand-500/15 text-brand-700 border-brand-500/40 dark:bg-brand-500/20 dark:text-brand-300 dark:border-brand-500/50',
+    Pending: 'bg-accent-500/10 text-accent-700 border-accent-500/30 dark:bg-accent-500/15 dark:text-accent-300 dark:border-accent-500/40',
+    Late: 'bg-rose-500/10 text-rose-700 border-rose-500/30 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/40',
+    'Partially Paid': 'bg-purple-500/10 text-purple-700 border-purple-500/30 dark:bg-purple-500/15 dark:text-purple-300 dark:border-purple-500/40',
 
     // Priorities
-    Low: 'bg-slate-100 text-slate-700 border-slate-200',
-    Medium: 'bg-teal-50 text-teal-700 border-teal-200',
-    High: 'bg-amber-50 text-amber-700 border-amber-200',
-    Urgent: 'bg-rose-100 text-rose-800 border-rose-300 animate-pulse',
+    Low: 'bg-dark-100 text-dark-700 border-dark-300 dark:bg-dark-800 dark:text-dark-300 dark:border-dark-700',
+    Medium: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/40',
+    High: 'bg-accent-500/10 text-accent-700 border-accent-500/30 dark:bg-accent-500/15 dark:text-accent-300 dark:border-accent-500/40',
+    Urgent: 'bg-rose-500/15 text-rose-700 border-rose-500/40 dark:bg-rose-500/25 dark:text-rose-300 dark:border-rose-500/50 animate-pulse',
 
     // Roles
-    landlord: 'bg-emerald-50 text-emerald-800 border-emerald-200',
-    tenant: 'bg-teal-50 text-teal-800 border-teal-200',
-    inspector: 'bg-amber-50 text-amber-800 border-amber-200',
-    admin: 'bg-purple-50 text-purple-800 border-purple-200',
+    landlord: 'bg-brand-500/15 text-brand-700 border-brand-500/40 dark:bg-brand-500/20 dark:text-brand-300 dark:border-brand-500/50',
+    tenant: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/40',
+    inspector: 'bg-accent-500/10 text-accent-700 border-accent-500/30 dark:bg-accent-500/15 dark:text-accent-300 dark:border-accent-500/40',
+    admin: 'bg-purple-500/15 text-purple-700 border-purple-500/40 dark:bg-purple-500/20 dark:text-purple-300 dark:border-purple-500/50',
   };
 
   const dotColor = {
-    Excellent: 'bg-emerald-500',
-    Good: 'bg-teal-500',
-    Fair: 'bg-amber-500',
+    Excellent: 'bg-brand-500',
+    Good: 'bg-emerald-500',
+    Fair: 'bg-accent-500',
     'Needs Attention': 'bg-orange-500',
     Damaged: 'bg-rose-500',
-    Active: 'bg-emerald-500',
-    Upcoming: 'bg-teal-500',
-    'Ending Soon': 'bg-amber-500',
-    Paid: 'bg-emerald-500',
-    Pending: 'bg-amber-500',
+    Active: 'bg-brand-500',
+    Upcoming: 'bg-emerald-500',
+    'Ending Soon': 'bg-accent-500',
+    Paid: 'bg-brand-500',
+    Pending: 'bg-accent-500',
     Late: 'bg-rose-500',
-    primary: 'bg-emerald-500',
-    success: 'bg-emerald-500',
-    warning: 'bg-amber-500',
+    primary: 'bg-brand-500',
+    success: 'bg-brand-500',
+    warning: 'bg-accent-500',
     danger: 'bg-rose-500',
     purple: 'bg-purple-500',
-    default: 'bg-slate-400',
+    default: 'bg-dark-400',
   };
 
   const selectedClass = variantClasses[variant] || variantClasses.default;
@@ -88,9 +88,9 @@ const Badge = ({ children, variant = 'default', size = 'md', dot = false, classN
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full border ${sizeClasses[size]} ${selectedClass} ${className}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border backdrop-blur-sm transition-colors duration-200 ${sizeClasses[size]} ${selectedClass} ${className}`}
     >
-      {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${selectedDot}`} />}
+      {dot && <span className={`w-1.5 h-1.5 rounded-full shrink-0 shadow-sm ${selectedDot}`} />}
       {children || variant}
     </span>
   );

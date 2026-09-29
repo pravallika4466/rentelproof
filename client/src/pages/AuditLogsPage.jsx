@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { History, Search, Filter, ShieldCheck, Clock, User, ArrowRight } from 'lucide-react';
 import api from '../api/client';
-import { TableSkeleton } from '../components/common/Skeleton';
+import { SkeletonCard } from '../components/common/CinematicLoader';
 import EmptyState from '../components/common/EmptyState';
+import CinematicPageTransition from '../components/common/CinematicPageTransition';
+import AnimatedNumber from '../components/common/AnimatedNumber';
 
 const AuditLogsPage = () => {
   const [logs, setLogs] = useState([]);
@@ -34,40 +36,42 @@ const AuditLogsPage = () => {
   }, [entityFilter]);
 
   return (
-    <div className="space-y-6">
+    <CinematicPageTransition className="space-y-6">
       {/* Header */}
       <div>
         <div className="flex items-center gap-2 mb-1">
-          <span className="text-xs font-bold uppercase tracking-wider text-brand-600">
+          <span className="text-xs font-bold uppercase tracking-wider text-brand-600 dark:text-brand-400 font-mono">
             Tamper-Evident Ledger
           </span>
-          <span className="text-slate-300">•</span>
-          <span className="text-xs font-semibold text-slate-500">Immutable Audit Trail</span>
+          <span className="text-dark-300 dark:text-dark-600">•</span>
+          <span className="text-xs font-semibold text-dark-500 dark:text-dark-400">Immutable Audit Trail</span>
         </div>
-        <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">System Activity & Evidence Trail</h1>
-        <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-dark-950 dark:text-white tracking-tight">
+          System Activity & Evidence Trail
+        </h1>
+        <p className="text-xs sm:text-sm text-dark-500 dark:text-dark-400 mt-0.5">
           Verifiable record of every property listing, inspection upload, and maintenance status shift
         </p>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div className="p-4 rounded-2xl glass-card flex flex-wrap items-center justify-between gap-3">
         <div className="relative flex-1 min-w-[240px]">
-          <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+          <Search className="w-4 h-4 absolute left-3.5 top-3 text-dark-400" />
           <input
             type="text"
             placeholder="Search audit trail by action or description..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && fetchLogs()}
-            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none"
+            className="w-full pl-10 pr-4 py-2 text-xs rounded-xl glass-input placeholder:text-dark-400 focus:outline-none"
           />
         </div>
 
         <select
           value={entityFilter}
           onChange={(e) => setEntityFilter(e.target.value)}
-          className="text-xs rounded-xl border border-slate-200 px-3 py-2 bg-slate-50 text-slate-700 font-medium focus:outline-none"
+          className="text-xs rounded-xl glass-input px-3 py-2 text-dark-800 dark:text-dark-200 font-medium focus:outline-none cursor-pointer"
         >
           <option value="all">All Evidence Entities</option>
           <option value="Property">Property</option>
@@ -83,13 +87,15 @@ const AuditLogsPage = () => {
       </div>
 
       {/* Logs Table */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-          <h3 className="text-base font-bold text-slate-900">Recorded Audit Events ({logs.length})</h3>
+      <div className="rounded-3xl glass-card overflow-hidden shadow-card">
+        <div className="p-6 border-b border-light-300 dark:border-dark-700/80 flex items-center justify-between">
+          <h3 className="text-base font-bold text-dark-950 dark:text-white">
+            Recorded Audit Events (<AnimatedNumber value={logs.length} />)
+          </h3>
         </div>
 
         {loading ? (
-          <TableSkeleton rows={6} />
+          <SkeletonCard count={3} />
         ) : logs.length === 0 ? (
           <div className="p-8">
             <EmptyState
@@ -101,7 +107,7 @@ const AuditLogsPage = () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-100">
+              <thead className="bg-light-100/50 dark:bg-dark-900/60 text-dark-500 dark:text-dark-400 font-bold uppercase tracking-wider border-b border-light-300 dark:border-dark-700/80">
                 <tr>
                   <th className="px-6 py-4">Action</th>
                   <th className="px-6 py-4">Entity</th>
@@ -110,25 +116,25 @@ const AuditLogsPage = () => {
                   <th className="px-6 py-4">Timestamp</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100">
+              <tbody className="divide-y divide-light-200 dark:divide-dark-800/80">
                 {logs.map((log) => (
-                  <tr key={log._id} className="hover:bg-slate-50/60 transition">
-                    <td className="px-6 py-4 font-bold text-slate-900">
+                  <tr key={log._id} className="hover:bg-light-100/40 dark:hover:bg-dark-850/40 transition">
+                    <td className="px-6 py-4 font-bold text-dark-950 dark:text-white">
                       <span className="flex items-center gap-2">
-                        <span className="w-2 h-2 rounded-full bg-brand-500 shrink-0" />
+                        <span className="w-2 h-2 rounded-full bg-brand-500 shrink-0 shadow-emerald-glow" />
                         {log.action}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700">
+                      <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md glass-panel text-dark-700 dark:text-dark-300 font-mono">
                         {log.entity}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-slate-600 max-w-md leading-relaxed">{log.description}</td>
-                    <td className="px-6 py-4 font-semibold text-slate-800">
+                    <td className="px-6 py-4 text-dark-600 dark:text-dark-300 max-w-md leading-relaxed">{log.description}</td>
+                    <td className="px-6 py-4 font-semibold text-dark-800 dark:text-dark-200">
                       {log.user?.name || 'System / Guest'}
                     </td>
-                    <td className="px-6 py-4 text-slate-400 font-mono text-[11px]">
+                    <td className="px-6 py-4 text-dark-500 dark:text-dark-400 font-mono text-[11px]">
                       {new Date(log.createdAt).toLocaleString(undefined, {
                         year: 'numeric',
                         month: 'short',
@@ -144,7 +150,7 @@ const AuditLogsPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </CinematicPageTransition>
   );
 };
 

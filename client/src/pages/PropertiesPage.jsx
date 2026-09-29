@@ -6,7 +6,11 @@ import { useAuth } from '../context/AuthContext';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import EmptyState from '../components/common/EmptyState';
-import { CardSkeleton } from '../components/common/Skeleton';
+import { SkeletonCard } from '../components/common/CinematicLoader';
+import TiltCard from '../components/common/TiltCard';
+import PropertyArchitecturalScene from '../components/3d/PropertyArchitecturalScene';
+import AnimatedNumber from '../components/common/AnimatedNumber';
+import CinematicPageTransition from '../components/common/CinematicPageTransition';
 
 const PropertiesPage = () => {
   const { isLandlord, isAdmin } = useAuth();
@@ -46,36 +50,77 @@ const PropertiesPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Page Header */}
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Properties Directory</h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Manage your rental assets, room checklists, and occupancy records
-          </p>
+    <CinematicPageTransition>
+      <div className="space-y-6 animate-fade-in">
+        {/* Page Header */}
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-dark-950 dark:text-white tracking-tight">
+              Properties Directory
+            </h1>
+            <p className="text-xs sm:text-sm text-dark-500 dark:text-dark-400 mt-0.5">
+              Manage your rental assets, room checklists, and occupancy records
+            </p>
+          </div>
+
+          {(isLandlord || isAdmin) && (
+            <Link to="/properties/new">
+              <Button variant="primary" size="md" icon={Plus}>
+                Add Property
+              </Button>
+            </Link>
+          )}
         </div>
 
-        {(isLandlord || isAdmin) && (
-          <Link to="/properties/new">
-            <Button variant="primary" size="md" icon={Plus}>
-              Add Property
-            </Button>
-          </Link>
-        )}
-      </div>
+        {/* 3D Architectural Asset Banner */}
+        <div className="p-6 sm:p-7 rounded-3xl glass-card border border-brand-500/20 shadow-card-hover relative overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          <div className="lg:col-span-7 space-y-3">
+            <span className="text-[10px] font-mono uppercase tracking-widest text-brand-600 dark:text-brand-400 px-2.5 py-1 rounded-full bg-brand-500/10 border border-brand-500/20 inline-flex items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-brand-500 animate-pulse" />
+              Asset Portfolio Visualization
+            </span>
+            <h2 className="text-xl sm:text-2xl font-bold text-dark-950 dark:text-white tracking-tight">
+              Spatial Registry & Photographic Baselines
+            </h2>
+            <p className="text-xs text-dark-500 dark:text-dark-300 leading-relaxed max-w-xl">
+              Every property asset links directly to condition inventories, room-by-room photographic proofs, and verified deposit escrow terms.
+            </p>
+
+            <div className="flex items-center gap-6 pt-2 text-xs">
+              <div>
+                <span className="text-dark-400 block text-[11px]">Total Properties</span>
+                <span className="text-lg font-extrabold text-dark-950 dark:text-white font-mono">
+                  <AnimatedNumber value={properties.length} />
+                </span>
+              </div>
+              <div className="w-px h-8 bg-dark-200 dark:bg-dark-800" />
+              <div>
+                <span className="text-dark-400 block text-[11px]">Occupied Units</span>
+                <span className="text-lg font-extrabold text-brand-600 dark:text-brand-400 font-mono">
+                  <AnimatedNumber value={properties.filter((p) => p.status === 'Occupied').length} />
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="lg:col-span-5 flex items-center justify-center">
+            <div className="w-full max-w-[340px] rounded-2xl bg-dark-950/20 dark:bg-dark-950/50 border border-brand-500/20 overflow-hidden relative shadow-inner">
+              <PropertyArchitecturalScene />
+            </div>
+          </div>
+        </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm flex flex-wrap items-center justify-between gap-3">
+      <div className="p-4 rounded-2xl glass-card flex flex-wrap items-center justify-between gap-3">
         <form onSubmit={handleSearchSubmit} className="flex-1 min-w-[240px]">
           <div className="relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-3 text-slate-400" />
+            <Search className="w-4 h-4 absolute left-3.5 top-3 text-dark-400" />
             <input
               type="text"
               placeholder="Search properties by title, city, or address..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-500/20 focus:border-brand-500"
+              className="w-full pl-10 pr-4 py-2 text-xs rounded-xl glass-input placeholder:text-dark-400 focus:outline-none"
             />
           </div>
         </form>
@@ -84,7 +129,7 @@ const PropertiesPage = () => {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="text-xs rounded-xl border border-slate-200 px-3 py-2 bg-slate-50 text-slate-700 font-medium focus:outline-none"
+            className="text-xs rounded-xl glass-input px-3 py-2 text-dark-800 dark:text-dark-200 font-medium focus:outline-none cursor-pointer"
           >
             <option value="all">All Statuses</option>
             <option value="Available">Available</option>
@@ -95,7 +140,7 @@ const PropertiesPage = () => {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="text-xs rounded-xl border border-slate-200 px-3 py-2 bg-slate-50 text-slate-700 font-medium focus:outline-none"
+            className="text-xs rounded-xl glass-input px-3 py-2 text-dark-800 dark:text-dark-200 font-medium focus:outline-none cursor-pointer"
           >
             <option value="all">All Property Types</option>
             <option value="Apartment">Apartment</option>
@@ -108,11 +153,7 @@ const PropertiesPage = () => {
 
       {/* Property Cards Grid */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <CardSkeleton />
-          <CardSkeleton />
-          <CardSkeleton />
-        </div>
+        <SkeletonCard count={6} />
       ) : properties.length === 0 ? (
         <EmptyState
           icon={Building2}
@@ -132,20 +173,20 @@ const PropertiesPage = () => {
             return (
               <div
                 key={p._id}
-                className="bg-white rounded-3xl border border-slate-200/80 overflow-hidden shadow-sm hover:shadow-md transition-all group flex flex-col justify-between"
+                className="rounded-3xl glass-card overflow-hidden shadow-card flex flex-col justify-between group"
               >
                 <div>
                   {/* Property Image Header */}
-                  <div className="relative h-48 w-full overflow-hidden bg-slate-100">
+                  <div className="relative h-48 w-full overflow-hidden bg-dark-900">
                     <img
                       src={coverImage}
                       alt={p.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition duration-300"
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
                     />
                     <div className="absolute top-3 left-3">
                       <Badge variant={p.status}>{p.status}</Badge>
                     </div>
-                    <div className="absolute top-3 right-3 bg-slate-900/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">
+                    <div className="absolute top-3 right-3 bg-dark-950/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider border border-white/10">
                       {p.propertyType}
                     </div>
                   </div>
@@ -153,37 +194,37 @@ const PropertiesPage = () => {
                   {/* Property Details */}
                   <div className="p-5">
                     <div className="flex items-baseline justify-between mb-2">
-                      <span className="text-lg font-extrabold text-slate-900">
+                      <span className="text-lg font-extrabold text-dark-950 dark:text-white font-mono">
                         ₹{p.rentAmount?.toLocaleString('en-IN')}{' '}
-                        <span className="text-xs font-normal text-slate-500">/month</span>
+                        <span className="text-xs font-normal text-dark-500 dark:text-dark-400">/month</span>
                       </span>
-                      <span className="text-xs text-slate-400 font-medium">
+                      <span className="text-xs text-dark-400 font-mono">
                         Dep: ₹{p.depositAmount?.toLocaleString('en-IN')}
                       </span>
                     </div>
 
-                    <h3 className="text-base font-bold text-slate-900 group-hover:text-brand-600 transition line-clamp-1">
+                    <h3 className="text-base font-bold text-dark-950 dark:text-white group-hover:text-brand-500 transition line-clamp-1">
                       {p.title}
                     </h3>
 
-                    <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-1 line-clamp-1">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                    <p className="text-xs text-dark-500 dark:text-dark-400 flex items-center gap-1.5 mt-1 line-clamp-1">
+                      <MapPin className="w-3.5 h-3.5 text-brand-500 shrink-0" />
                       {p.address}, {p.city}
                     </p>
 
                     {/* Specs Pills */}
-                    <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-slate-100 text-slate-600 text-xs text-center">
+                    <div className="grid grid-cols-3 gap-2 mt-4 pt-4 border-t border-light-300 dark:border-dark-700/80 text-dark-600 dark:text-dark-300 text-xs text-center font-mono">
                       <div className="flex items-center justify-center gap-1">
-                        <Bed className="w-3.5 h-3.5 text-slate-400" />
-                        <span className="font-semibold">{p.bedrooms} Beds</span>
+                        <Bed className="w-3.5 h-3.5 text-dark-400" />
+                        <span>{p.bedrooms} Beds</span>
                       </div>
                       <div className="flex items-center justify-center gap-1">
-                        <Bath className="w-3.5 h-3.5 text-slate-400" />
-                        <span className="font-semibold">{p.bathrooms} Baths</span>
+                        <Bath className="w-3.5 h-3.5 text-dark-400" />
+                        <span>{p.bathrooms} Baths</span>
                       </div>
                       <div className="flex items-center justify-center gap-1">
-                        <Maximize className="w-3.5 h-3.5 text-slate-400" />
-                        <span className="font-semibold">{p.areaSqFt} sq.ft</span>
+                        <Maximize className="w-3.5 h-3.5 text-dark-400" />
+                        <span>{p.areaSqFt} sq.ft</span>
                       </div>
                     </div>
                   </div>
@@ -203,6 +244,7 @@ const PropertiesPage = () => {
         </div>
       )}
     </div>
+  </CinematicPageTransition>
   );
 };
 

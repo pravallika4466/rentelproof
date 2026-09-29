@@ -10,6 +10,11 @@ import {
   CheckCircle2,
   AlertTriangle,
   Upload,
+  DollarSign,
+  User,
+  ShieldCheck,
+  MapPin,
+  ExternalLink,
 } from 'lucide-react';
 import api from '../api/client';
 import { useAuth } from '../context/AuthContext';
@@ -17,8 +22,11 @@ import { useToast } from '../context/ToastContext';
 import Button from '../components/common/Button';
 import Badge from '../components/common/Badge';
 import Modal from '../components/common/Modal';
+import TiltCard from '../components/common/TiltCard';
+import CinematicPageTransition from '../components/common/CinematicPageTransition';
 import MaintenanceTimeline from '../components/maintenance/MaintenanceTimeline';
 import { CardSkeleton } from '../components/common/Skeleton';
+import ImageModal from '../components/common/ImageModal';
 
 const MaintenanceDetailPage = () => {
   const { id } = useParams();
@@ -28,6 +36,7 @@ const MaintenanceDetailPage = () => {
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [serviceProviders, setServiceProviders] = useState([]);
+  const [previewPhoto, setPreviewPhoto] = useState(null);
 
   // Assign modal
   const [assignModalOpen, setAssignModalOpen] = useState(false);
@@ -63,9 +72,10 @@ const MaintenanceDetailPage = () => {
   useEffect(() => {
     fetchTicket();
 
-    // Fetch technicians if landlord
+    // Fetch technicians if landlord or admin
     if (isLandlord || isAdmin) {
-      api.get('/admin/users', { params: { role: 'service_provider' } })
+      api
+        .get('/admin/users', { params: { role: 'service_provider' } })
         .then((res) => {
           if (res.data.success) {
             setServiceProviders(res.data.users || []);
@@ -143,40 +153,51 @@ const MaintenanceDetailPage = () => {
   }
 
   return (
-    <div className="space-y-6 max-w-5xl mx-auto">
-      <Link to="/maintenance" className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-800 transition">
-        <ArrowLeft className="w-4 h-4" /> Back to Maintenance List
+    <CinematicPageTransition className="space-y-6 max-w-5xl mx-auto">
+      <Link
+        to="/maintenance"
+        className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-brand-500 dark:text-dark-300 dark:hover:text-brand-400 transition-colors"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back to Maintenance Work Orders
       </Link>
 
-      {/* Ticket Header Card */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm space-y-6">
-        <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-100">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-xs font-bold uppercase text-brand-600">{ticket.category}</span>
+      {/* Ticket Header Card with 3D Tilt */}
+      <TiltCard maxTilt={3} depth={10}>
+        <div className="glass-card p-6 sm:p-8 rounded-3xl space-y-6 border border-brand-500/20">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-200/60 dark:border-dark-700/60">
+            <div>
+            <div className="flex items-center gap-2.5 mb-2">
+              <span className="text-xs font-bold uppercase tracking-wider text-brand-500 dark:text-brand-400 px-2.5 py-0.5 rounded-full bg-brand-500/10 border border-brand-500/20">
+                {ticket.category}
+              </span>
               <Badge variant={ticket.priority}>{ticket.priority} Priority</Badge>
               <Badge variant={ticket.status}>{ticket.status}</Badge>
             </div>
-            <h1 className="text-2xl font-extrabold text-slate-900">{ticket.title}</h1>
-            <p className="text-xs text-slate-500">
-              {ticket.property?.title} • Room: <span className="font-semibold text-slate-700">{ticket.room}</span>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+              {ticket.title}
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-dark-300 flex items-center gap-2 mt-1">
+              <MapPin className="w-3.5 h-3.5 text-brand-500" />
+              <span>{ticket.property?.title}</span>
+              <span>•</span>
+              <span>Room: <strong className="text-slate-700 dark:text-dark-100">{ticket.room}</strong></span>
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2.5">
             {(isLandlord || isAdmin) && ticket.status === 'Reported' && (
               <Button variant="primary" size="sm" icon={UserCheck} onClick={() => setAssignModalOpen(true)}>
-                Assign Technician
+                Dispatch Technician
               </Button>
             )}
 
             {(isServiceProvider || isLandlord || isAdmin) && ticket.status !== 'Completed' && (
               <>
                 <Button variant="outline" size="sm" icon={Clock} onClick={() => setStatusModalOpen(true)}>
-                  Update Status
+                  Update Progress
                 </Button>
                 <Button variant="success" size="sm" icon={CheckCircle2} onClick={() => setCompleteModalOpen(true)}>
-                  Mark Completed & Upload Proof
+                  Mark Completed
                 </Button>
               </>
             )}
@@ -185,54 +206,74 @@ const MaintenanceDetailPage = () => {
 
         {/* Issue Details & Initial Evidence */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 space-y-4">
+          <div className="md:col-span-2 space-y-5">
             <div>
-              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">
-                Reported Description
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-dark-400 mb-2">
+                Reported Description & Symptoms
               </h3>
-              <p className="text-sm text-slate-700 leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
+              <p className="text-sm text-slate-700 dark:text-dark-200 leading-relaxed bg-slate-50/70 dark:bg-dark-900/60 p-4 sm:p-5 rounded-2xl border border-slate-200/60 dark:border-dark-700/60">
                 {ticket.description}
               </p>
             </div>
 
             {/* Financial Ledger Details */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 sm:p-5 bg-slate-50/70 dark:bg-dark-900/60 rounded-2xl border border-slate-200/60 dark:border-dark-700/60 text-xs">
               <div>
-                <span className="text-slate-400 block text-[11px]">Reported By</span>
-                <span className="font-bold text-slate-800">{ticket.reportedBy?.name}</span>
+                <span className="text-slate-400 dark:text-dark-400 block text-[11px] font-medium">Reported By</span>
+                <span className="font-bold text-slate-800 dark:text-dark-100 truncate block mt-0.5">
+                  {ticket.reportedBy?.name || 'Tenant'}
+                </span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Assigned Technician</span>
-                <span className="font-bold text-slate-800">{ticket.assignedTo?.name || 'Pending'}</span>
+                <span className="text-slate-400 dark:text-dark-400 block text-[11px] font-medium">Assigned Pro</span>
+                <span className="font-bold text-slate-800 dark:text-dark-100 truncate block mt-0.5">
+                  {ticket.assignedTo?.name || 'Pending Assignment'}
+                </span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Cost Estimate</span>
-                <span className="font-bold text-slate-800">₹{ticket.costEstimate || 0}</span>
+                <span className="text-slate-400 dark:text-dark-400 block text-[11px] font-medium">Initial Estimate</span>
+                <span className="font-bold text-slate-800 dark:text-dark-100 block font-mono mt-0.5">
+                  ₹{ticket.costEstimate?.toLocaleString('en-IN') || 0}
+                </span>
               </div>
               <div>
-                <span className="text-slate-400 block text-[11px]">Actual Cost</span>
-                <span className="font-bold text-emerald-600">₹{ticket.actualCost || 0}</span>
+                <span className="text-slate-400 dark:text-dark-400 block text-[11px] font-medium">Final Invoiced</span>
+                <span className="font-bold text-brand-600 dark:text-brand-400 block font-mono mt-0.5">
+                  ₹{ticket.actualCost?.toLocaleString('en-IN') || 0}
+                </span>
               </div>
             </div>
           </div>
 
           {/* Photo Evidence */}
           <div>
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-dark-400 mb-2">
               Reported Photographic Proof
             </h3>
             {ticket.photos && ticket.photos.length > 0 ? (
-              <div className="rounded-2xl overflow-hidden border border-slate-200 h-44 shadow-sm">
-                <img src={ticket.photos[0]} alt="Issue Evidence" className="w-full h-full object-cover" />
+              <div
+                onClick={() => setPreviewPhoto(ticket.photos[0])}
+                className="relative rounded-2xl overflow-hidden border border-slate-200/70 dark:border-dark-700/70 h-44 shadow-sm group cursor-pointer"
+              >
+                <img
+                  src={ticket.photos[0]}
+                  alt="Issue Evidence"
+                  className="w-full h-full object-cover group-hover:scale-108 transition duration-500"
+                />
+                <div className="absolute inset-0 bg-dark-950/20 group-hover:bg-dark-950/0 transition" />
+                <div className="absolute bottom-2 right-2 px-2.5 py-1 rounded-lg bg-dark-950/70 text-[10px] text-white backdrop-blur-sm flex items-center gap-1 font-mono">
+                  <ExternalLink className="w-3 h-3 text-brand-400" /> Click to Expand
+                </div>
               </div>
             ) : (
-              <div className="p-8 text-center bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-xs text-slate-400">
-                No initial photo attached
+              <div className="h-44 flex items-center justify-center p-6 text-center bg-slate-50/70 dark:bg-dark-900/60 rounded-2xl border border-dashed border-slate-200/80 dark:border-dark-700/80 text-xs text-slate-400 dark:text-dark-400">
+                No initial photo attached to report
               </div>
             )}
           </div>
         </div>
       </div>
+      </TiltCard>
 
       {/* Visual Resolution Timeline */}
       <MaintenanceTimeline
@@ -245,31 +286,33 @@ const MaintenanceDetailPage = () => {
       <Modal
         isOpen={assignModalOpen}
         onClose={() => setAssignModalOpen(false)}
-        title="Assign Service Provider"
-        subtitle="Dispatches work order to certified technician"
+        title="Dispatch Service Technician"
+        subtitle="Route work order to certified tradesperson or contractor"
       >
         <form onSubmit={handleAssignProvider} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Select Technician</label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-dark-200 mb-1.5">
+              Select Certified Technician
+            </label>
             <select
               required
               value={selectedProvider}
               onChange={(e) => setSelectedProvider(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-brand-500"
+              className="glass-input w-full p-2.5 text-xs text-slate-900 dark:text-white"
             >
               {serviceProviders.map((sp) => (
-                <option key={sp._id} value={sp._id}>
+                <option key={sp._id} value={sp._id} className="dark:bg-dark-900">
                   {sp.name} ({sp.email})
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200/60 dark:border-dark-700/60">
             <Button variant="outline" size="sm" onClick={() => setAssignModalOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="sm" loading={assigning}>
+            <Button type="submit" variant="primary" size="sm" loading={assigning} icon={UserCheck}>
               Confirm Dispatch
             </Button>
           </div>
@@ -280,37 +323,38 @@ const MaintenanceDetailPage = () => {
       <Modal
         isOpen={statusModalOpen}
         onClose={() => setStatusModalOpen(false)}
-        title="Update Resolution Status"
+        title="Update Resolution Progress"
+        subtitle="Log real-time work status to the tamper-evident audit trail"
       >
         <form onSubmit={handleUpdateStatus} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Status</label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-dark-200 mb-1.5">Status</label>
             <select
               value={newStatus}
               onChange={(e) => setNewStatus(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-xs text-slate-900 focus:outline-none"
+              className="glass-input w-full p-2.5 text-xs text-slate-900 dark:text-white"
             >
-              <option value="Reviewed">Reviewed</option>
-              <option value="In Progress">In Progress (Parts Procured / On-Site)</option>
+              <option value="Reviewed" className="dark:bg-dark-900">Reviewed</option>
+              <option value="In Progress" className="dark:bg-dark-900">In Progress (Parts Procured / On-Site)</option>
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Timeline Note</label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-dark-200 mb-1.5">Timeline Note</label>
             <textarea
-              rows={2}
-              placeholder="e.g. Technician arrived on site; replacement gasket sourced..."
+              rows={3}
+              placeholder="e.g. Technician arrived on site; replacement gasket sourced and tested..."
               value={statusNote}
               onChange={(e) => setStatusNote(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 p-2 text-xs focus:outline-none"
+              className="glass-input w-full p-2.5 text-xs"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200/60 dark:border-dark-700/60">
             <Button variant="outline" size="sm" onClick={() => setStatusModalOpen(false)}>
               Cancel
             </Button>
-            <Button type="submit" variant="primary" size="sm" loading={updatingStatus}>
+            <Button type="submit" variant="primary" size="sm" loading={updatingStatus} icon={Clock}>
               Save Note
             </Button>
           </div>
@@ -321,35 +365,39 @@ const MaintenanceDetailPage = () => {
       <Modal
         isOpen={completeModalOpen}
         onClose={() => setCompleteModalOpen(false)}
-        title="Complete Repair & Record Proof"
-        subtitle="Upload completion evidence and record invoice cost"
+        title="Certify Completion & Record Proof"
+        subtitle="Provide verified photographic proof and final invoice cost"
       >
         <form onSubmit={handleCompleteRepair} className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Actual Repair Cost (₹)</label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-dark-200 mb-1.5">
+              Actual Repair Cost (₹)
+            </label>
             <input
               type="number"
               required
               placeholder="1200"
               value={actualCost}
               onChange={(e) => setActualCost(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-xs focus:outline-none"
+              className="glass-input w-full p-2.5 text-xs"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-slate-700 mb-1">Technician Resolution Summary</label>
+            <label className="block text-xs font-bold text-slate-700 dark:text-dark-200 mb-1.5">
+              Technician Resolution Summary
+            </label>
             <textarea
               rows={3}
               required
               placeholder="e.g. Replaced 35mm ceramic disc cartridge and renewed Teflon seals. Tested under full pressure with zero leakage."
               value={completionNotes}
               onChange={(e) => setCompletionNotes(e.target.value)}
-              className="w-full rounded-xl border border-slate-300 p-2.5 text-xs focus:outline-none"
+              className="glass-input w-full p-2.5 text-xs"
             />
           </div>
 
-          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100">
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-200/60 dark:border-dark-700/60">
             <Button variant="outline" size="sm" onClick={() => setCompleteModalOpen(false)}>
               Cancel
             </Button>
@@ -359,7 +407,14 @@ const MaintenanceDetailPage = () => {
           </div>
         </form>
       </Modal>
-    </div>
+
+      <ImageModal
+        isOpen={!!previewPhoto}
+        onClose={() => setPreviewPhoto(null)}
+        src={previewPhoto}
+        title="Reported Defect Photographic Proof"
+      />
+    </CinematicPageTransition>
   );
 };
 
